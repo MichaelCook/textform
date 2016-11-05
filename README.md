@@ -22,7 +22,7 @@ Example:
 
 returns:
 
-    "now is   :good men:  to the\n" +
-    "the time :to come :  aid of\n" +
-    "for all  :        :   their\n" +
-    "         :        :   party"
+    "now is   : good men :   come to\n" +
+    "the time :    to    :the aid of\n" +
+    "for all  :          :     their\n" +
+    "         :          :     party"

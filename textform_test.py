@@ -131,16 +131,16 @@ class TestStringMethods(unittest.TestCase):
                          "all-good-  :\n" +
                          "men        :")
 
-        r = textform.format("@<<<<<<<<:@|||||||:@>>>>>>>",
+        r = textform.format("@<<<<<<<<:@|||||||||:@>>>>>>>>>",
                             ["now is the time for all",
-                             "good men to come",
-                             "to the aid of their party"])
+                             "good men to",
+                             "come to the aid of their party"])
         print "\n{}\n{}\n{}".format("=" * 70, r, "=" * 70)
         self.assertEqual(r,
-                         "now is   :good men:  to the\n" +
-                         "the time :to come :  aid of\n" +
-                         "for all  :        :   their\n" +
-                         "         :        :   party")
+                         "now is   : good men :   come to\n" +
+                         "the time :    to    :the aid of\n" +
+                         "for all  :          :     their\n" +
+                         "         :          :     party")
 
 if __name__ == '__main__':
     unittest.main()
