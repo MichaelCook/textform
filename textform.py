@@ -42,15 +42,15 @@ Example:
 
  textform.format("@<<<<<<<<:@|||||||:@>>>>>>>",
                  ["now is the time for all",
-                  "good men to come",
-                  "to the aid of their party"])
+                  "good men to",
+                  "come to the aid of their party"])
 
 returns:
 
- "now is   :good men:  to the\n" +
- "the time :to come :  aid of\n" +
- "for all  :        :   their\n" +
- "         :        :   party"
+ "now is   : good men :  come to\n" +
+ "the time :    to    :the aid of\n" +
+ "for all  :          :     their\n" +
+ "         :          :     party"
 
 """
 import re
