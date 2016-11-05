@@ -17,8 +17,8 @@ Example:
 
     textform.format("@<<<<<<<<:@|||||||:@>>>>>>>",
                     ["now is the time for all",
-                     "good men to come",
-                     "to the aid of their party"])
+                     "good men to",
+                     "come to the aid of their party"])
 
 returns:
 
