@@ -31,10 +31,10 @@ import unittest
 class TestStringMethods(unittest.TestCase):
 
     def test_basic(self):
-        r = textform.format("hello world")
+        r = textform.format("hello world", [])
         self.assertEqual(r, "hello world")
 
-        r = textform.format("")
+        r = textform.format("", [])
         self.assertEqual(r, "")
 
     def test_wrong_number_of_values(self):
@@ -43,7 +43,7 @@ class TestStringMethods(unittest.TestCase):
         with self.assertRaises(textform.Mismatch):
             textform.format("@>>>", [1, 2])
         with self.assertRaises(textform.Mismatch):
-            textform.format("@>>>")
+            textform.format("@>>>", [])
 
     def test3(self):
         r = textform.format("@<<<<<< @|||||| @>>>>>>", (101, 202, 303))
