@@ -4,9 +4,9 @@ like Perl format (perlform(1)).
 
 In the template:
 
- * @<<<<   Left justified field.
- * @>>>>   Right justified field.
- * @||||   Centered field.
+ * `@<<<<`  Left justified field.
+ * `@>>>>`  Right justified field.
+ * `@||||`  Centered field.
 
 Any other text in the template is copied through to the result.
 
