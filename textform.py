@@ -124,9 +124,13 @@ Each line is not terminated with newline.
             line.append(fields[fi])
             continue
         vi = fi / 2
-        line.append(values[vi].pop(0))
-        if values[vi]:
-            more = True
+        v = values[vi]
+        if v:
+            line.append(v.pop(0))
+            if v:
+                more = True
+        else:
+            line.append(" " * len(fields[fi]))
     lines = ["".join(line).rstrip()]
 
     while more:
