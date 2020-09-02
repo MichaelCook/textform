@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python3
 
 # This software is distributed under the "Simplified BSD license":
 #
@@ -25,122 +25,122 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import textform
 import unittest
+import textform
 
 class TestStringMethods(unittest.TestCase):
 
     def test_basic(self):
-        r = textform.format("hello world", [])
-        self.assertEqual(r, "hello world")
+        r = textform.format('hello world', [])
+        self.assertEqual(r, 'hello world')
 
-        r = textform.format("", [])
-        self.assertEqual(r, "")
+        r = textform.format('', [])
+        self.assertEqual(r, '')
 
     def test_wrong_number_of_values(self):
         with self.assertRaises(textform.Mismatch):
-            textform.format("foo", [1])
+            textform.format('foo', [1])
         with self.assertRaises(textform.Mismatch):
-            textform.format("@>>>", [1, 2])
+            textform.format('@>>>', [1, 2])
         with self.assertRaises(textform.Mismatch):
-            textform.format("@>>>", [])
+            textform.format('@>>>', [])
 
     def test3(self):
-        r = textform.format("@<<<<<< @|||||| @>>>>>>", (101, 202, 303))
-        self.assertEqual(r, "101       202       303")
+        r = textform.format('@<<<<<< @|||||| @>>>>>>', (101, 202, 303))
+        self.assertEqual(r, '101       202       303')
 
-        r = textform.format(": @<<<<<< : @|||||| : @>>>>>> :", (101, 202, 303))
-        self.assertEqual(r, ": 101     :   202   :     303 :")
+        r = textform.format(': @<<<<<< : @|||||| : @>>>>>> :', (101, 202, 303))
+        self.assertEqual(r, ': 101     :   202   :     303 :')
 
     def test_left_middle_right(self):
-        r = textform.format("@<<<<<<", ["foo"])
-        self.assertEqual(r, "foo")
+        r = textform.format('@<<<<<<', ['foo'])
+        self.assertEqual(r, 'foo')
 
-        r = textform.format("@>>>>>>", ["foo"])
-        self.assertEqual(r, "    foo")
+        r = textform.format('@>>>>>>', ['foo'])
+        self.assertEqual(r, '    foo')
 
-        r = textform.format("@||||||", ["foo"])
-        self.assertEqual(r, "  foo")
+        r = textform.format('@||||||', ['foo'])
+        self.assertEqual(r, '  foo')
 
     # Leading whitespace in the template is preserved.
     # Trailing whitespace is not.
     def test_left_middle_right_spaces(self):
-        r = textform.format("  @<<<<<<  ", ["foo"])
-        self.assertEqual(r, "  foo")
+        r = textform.format('  @<<<<<<  ', ['foo'])
+        self.assertEqual(r, '  foo')
 
-        r = textform.format("  @>>>>>>  ", ["foo"])
-        self.assertEqual(r, "      foo")
+        r = textform.format('  @>>>>>>  ', ['foo'])
+        self.assertEqual(r, '      foo')
 
-        r = textform.format("  @||||||  ", ["foo"])
-        self.assertEqual(r, "    foo")
+        r = textform.format('  @||||||  ', ['foo'])
+        self.assertEqual(r, '    foo')
 
     def test_multiline(self):
-        t = "now is the time for all good men to come to the aid of their party".split()
-        r = textform.format("@<<<<<<<<<:@|||||||||:@>>>>>>>>>",
-                            [" ".join(t),
-                             " ".join(reversed(t)),
-                             " ".join(t[:-3]).upper()])
-        print "\n{}\n{}\n{}".format("=" * 70, r, "=" * 70)
+        t = 'now is the time for all good men to come to the aid of their party'.split()
+        r = textform.format('@<<<<<<<<<:@|||||||||:@>>>>>>>>>',
+                            [' '.join(t),
+                             ' '.join(reversed(t)),
+                             ' '.join(t[:-3]).upper()])
+        print('\n{}\n{}\n{}'.format('=' * 70, r, '=' * 70))
         self.assertEqual(r,
-                         "now is the:  party   :NOW IS THE\n" +
-                         "time for  : their of :  TIME FOR\n" +
-                         "all good  :aid the to:  ALL GOOD\n" +
-                         "men to    : come to  :    MEN TO\n" +
-                         "come to   : men good :   COME TO\n" +
-                         "the aid of: all for  :   THE AID\n" +
-                         "their     : time the :\n" +
-                         "party     :  is now  :")
+                         'now is the:  party   :NOW IS THE\n' +
+                         'time for  : their of :  TIME FOR\n' +
+                         'all good  :aid the to:  ALL GOOD\n' +
+                         'men to    : come to  :    MEN TO\n' +
+                         'come to   : men good :   COME TO\n' +
+                         'the aid of: all for  :   THE AID\n' +
+                         'their     : time the :\n' +
+                         'party     :  is now  :')
 
-        r = textform.format("@<<<<<<<<<:@|||||||||:@>>>>>>>>>",
-                            [" ".join(t[:-3]),
-                             " ".join(reversed(t)),
-                             " ".join(t).upper()])
-        print "\n{}\n{}\n{}".format("=" * 70, r, "=" * 70)
+        r = textform.format('@<<<<<<<<<:@|||||||||:@>>>>>>>>>',
+                            [' '.join(t[:-3]),
+                             ' '.join(reversed(t)),
+                             ' '.join(t).upper()])
+        print('\n{}\n{}\n{}'.format('=' * 70, r, '=' * 70))
         self.assertEqual(r,
-                         "now is the:  party   :NOW IS THE\n" +
-                         "time for  : their of :  TIME FOR\n" +
-                         "all good  :aid the to:  ALL GOOD\n" +
-                         "men to    : come to  :    MEN TO\n" +
-                         "come to   : men good :   COME TO\n" +
-                         "the aid   : all for  :THE AID OF\n" +
-                         "          : time the :     THEIR\n" +
-                         "          :  is now  :     PARTY")
+                         'now is the:  party   :NOW IS THE\n' +
+                         'time for  : their of :  TIME FOR\n' +
+                         'all good  :aid the to:  ALL GOOD\n' +
+                         'men to    : come to  :    MEN TO\n' +
+                         'come to   : men good :   COME TO\n' +
+                         'the aid   : all for  :THE AID OF\n' +
+                         '          : time the :     THEIR\n' +
+                         '          :  is now  :     PARTY')
 
-        r = textform.format("@<<<<<<<<<:@|||||||||:@>>>>>>>>>",
-                            [" ".join(t),
-                             " ".join(reversed(t[:-3])),
-                             " ".join(t).upper()])
-        print "\n{}\n{}\n{}".format("=" * 70, r, "=" * 70)
+        r = textform.format('@<<<<<<<<<:@|||||||||:@>>>>>>>>>',
+                            [' '.join(t),
+                             ' '.join(reversed(t[:-3])),
+                             ' '.join(t).upper()])
+        print('\n{}\n{}\n{}'.format('=' * 70, r, '=' * 70))
         self.assertEqual(r,
-                         "now is the:aid the to:NOW IS THE\n" +
-                         "time for  : come to  :  TIME FOR\n" +
-                         "all good  : men good :  ALL GOOD\n" +
-                         "men to    : all for  :    MEN TO\n" +
-                         "come to   : time the :   COME TO\n" +
-                         "the aid of:  is now  :THE AID OF\n" +
-                         "their     :          :     THEIR\n" +
-                         "party     :          :     PARTY")
+                         'now is the:aid the to:NOW IS THE\n' +
+                         'time for  : come to  :  TIME FOR\n' +
+                         'all good  : men good :  ALL GOOD\n' +
+                         'men to    : all for  :    MEN TO\n' +
+                         'come to   : time the :   COME TO\n' +
+                         'the aid of:  is now  :THE AID OF\n' +
+                         'their     :          :     THEIR\n' +
+                         'party     :          :     PARTY')
 
-        r = textform.format("@<<<<<<<<<<:@>>>>>>>>>>",
-                            ["now-is-the-time-for-all-good-men",
-                             "hello-world"])
-        print "\n{}\n{}\n{}".format("=" * 70, r, "=" * 70)
+        r = textform.format('@<<<<<<<<<<:@>>>>>>>>>>',
+                            ['now-is-the-time-for-all-good-men',
+                             'hello-world'])
+        print('\n{}\n{}\n{}'.format('=' * 70, r, '=' * 70))
         self.assertEqual(r,
-                         "now-is-the-:hello-world\n" +
-                         "time-for-  :\n" +
-                         "all-good-  :\n" +
-                         "men        :")
+                         'now-is-the-:hello-world\n' +
+                         'time-for-  :\n' +
+                         'all-good-  :\n' +
+                         'men        :')
 
-        r = textform.format("@<<<<<<<<:@|||||||||:@>>>>>>>>>",
-                            ["now is the time for all",
-                             "good men to",
-                             "come to the aid of their party"])
-        print "\n{}\n{}\n{}".format("=" * 70, r, "=" * 70)
+        r = textform.format('@<<<<<<<<:@|||||||||:@>>>>>>>>>',
+                            ['now is the time for all',
+                             'good men to',
+                             'come to the aid of their party'])
+        print('\n{}\n{}\n{}'.format('=' * 70, r, '=' * 70))
         self.assertEqual(r,
-                         "now is   : good men :   come to\n" +
-                         "the time :    to    :the aid of\n" +
-                         "for all  :          :     their\n" +
-                         "         :          :     party")
+                         'now is   : good men :   come to\n' +
+                         'the time :    to    :the aid of\n' +
+                         'for all  :          :     their\n' +
+                         '         :          :     party')
 
 if __name__ == '__main__':
     unittest.main()

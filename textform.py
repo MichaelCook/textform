@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python3
 
 # This software is distributed under the "Simplified BSD license":
 #
@@ -25,7 +25,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Format values with a template string like Perl format (perlform(1)).
+"""
+Format values with a template string like Perl format (perlform(1)).
 
 In the template:
 
@@ -35,48 +36,55 @@ In the template:
 
 Any other text in the template is copied through to the result.
 
-The "~~" feature of Perl format is implied: repeat until all fields
+The '~~' feature of Perl format is implied: repeat until all fields
 are exhausted.
 
 Example:
 
- textform.format("@<<<<<<<<:@|||||||:@>>>>>>>",
-                 ["now is the time for all",
-                  "good men to",
-                  "come to the aid of their party"])
+ textform.format('@<<<<<<<<:@|||||||:@>>>>>>>',
+                 ['now is the time for all',
+                  'good men to',
+                  'come to the aid of their party'])
 
 returns:
 
- "now is   : good men :  come to\n" +
- "the time :    to    :the aid of\n" +
- "for all  :          :     their\n" +
- "         :          :     party"
+ 'now is   : good men :  come to\n' +
+ 'the time :    to    :the aid of\n' +
+ 'for all  :          :     their\n' +
+ '         :          :     party'
 
 """
 import re
 import textwrap
 
-field_re = re.compile(r'(@[<|>]+)')
-spaces_re = re.compile(r'\s+')
+_FIELD_RE = re.compile(r'(@[<|>]+)')
+_SPACES_RE = re.compile(r'\s+')
 
 class Mismatch(Exception):
     pass
 
+# pylint: disable=redefined-builtin
 def format(template, values):
-    """Same as format_to_lines but returns a single string."""
-    return "\n".join(format_to_lines(template, values))
+    """
+    Same as format_to_lines but returns a single string
+    """
+    if not isinstance(values, list):
+        values = list(values)
+    return '\n'.join(format_to_lines(template, values))
 
 def format_to_lines(template, values):
-    """Format 'values' into 'template'.
+    """
+    Format 'values' into 'template'.
 
-Returns a list of one or more lines of text.
-Each line is not terminated with newline.
-"""
+    Returns a list of one or more lines of text.
+    Each line is not terminated with newline.
+    """
+
     # Parse the template.
     fields = []
     t = template
     while True:
-        m = field_re.search(t)
+        m = _FIELD_RE.search(t)
         if not m:
             break
         a, z = m.span(0)
@@ -90,74 +98,75 @@ Each line is not terminated with newline.
     # string (i.e., if len(fields)==1).
 
     if len(values) * 2 + 1 != len(fields):
-        raise Mismatch("Wrong number of values {} for number of fields {}"
-                       .format(len(values), len(fields) / 2))
+        raise Mismatch(f'Wrong number of values {len(values)} '
+                       f'for number of fields {len(fields) // 2}')
 
     # Wrap each value to the width of the corresponding field.
     values = list(values)
-    for vi in xrange(len(values)):
+    # pylint: disable=consider-using-enumerate
+    for vi in range(len(values)):
         fi = 2 * vi + 1
         f = fields[fi]
         v = values[vi]
 
-        v = spaces_re.sub(str(v), " ").strip()
+        v = _SPACES_RE.sub(str(v), ' ').strip()
         if f:
             v = textwrap.wrap(v, width=len(f))
         else:
             v = []
 
         t = f[1:2]
-        if t == ">":
+        if t == '>':
             justify = _justify_right
-        elif t == "|":
+        elif t == '|':
             justify = _justify_center
         else:
             justify = _justify_left
-        v = map(lambda x: justify(x, len(f)), v)
+        v = list(map(lambda x: justify(x, len(f)), v))
 
         values[vi] = v
 
     line = []
     more = False
-    for fi in xrange(len(fields)):
+    for fi in range(len(fields)):
         if fi % 2 == 0:
             line.append(fields[fi])
             continue
-        vi = fi / 2
+        vi = fi // 2
         v = values[vi]
         if v:
             line.append(v.pop(0))
             if v:
                 more = True
         else:
-            line.append(" " * len(fields[fi]))
-    lines = ["".join(line).rstrip()]
+            line.append(' ' * len(fields[fi]))
+    lines = [''.join(line).rstrip()]
 
     while more:
         line = []
         more = False
-        for fi in xrange(len(fields)):
+        for fi in range(len(fields)):
             if fi % 2 == 0:
                 line.append(fields[fi])
                 continue
-            vi = fi / 2
+            vi = fi // 2
             if not values[vi]:
-                line.append(" " * len(fields[fi]))
+                line.append(' ' * len(fields[fi]))
                 continue
             line.append(values[vi].pop(0))
             if values[vi]:
                 more = True
-        lines.append("".join(line).rstrip())
+        lines.append(''.join(line).rstrip())
 
     return lines
 
 def _justify_left(s, width):
-    return s + " " * (width - len(s))
+    return s + ' ' * (width - len(s))
 
 def _justify_right(s, width):
-    return " " * (width - len(s)) + s
+    return ' ' * (width - len(s)) + s
 
 def _justify_center(s, width):
     spaces = width - len(s)
-    left = spaces / 2
-    return " " * left + s + " " * (spaces - left)
+    left = spaces // 2
+    return ' ' * left + s + ' ' * (spaces - left)
