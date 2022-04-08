@@ -56,15 +56,29 @@ returns:
 """
 import re
 import textwrap
+from typing import List, Sequence, Any, Final
 
-_FIELD_RE = re.compile(r'(@[<|>]+)')
-_SPACES_RE = re.compile(r'\s+')
+_FIELD_RE: Final = re.compile(r'(@[<|>]+)')
+_SPACES_RE: Final = re.compile(r'\s+')
+
+def _cleanup_spaces(v: str) -> str:
+    return _SPACES_RE.sub(str(v), ' ').strip()
+
+def _justify_left(s: str, width: int) -> str:
+    return s + ' ' * (width - len(s))
+
+def _justify_right(s: str, width: int) -> str:
+    return ' ' * (width - len(s)) + s
+
+def _justify_center(s: str, width: int) -> str:
+    spaces = width - len(s)
+    left = spaces // 2
+    return ' ' * left + s + ' ' * (spaces - left)
 
 class Mismatch(Exception):
     pass
 
-# pylint: disable=redefined-builtin
-def format(template, values):
+def format(template: str, values: str | Sequence[Any]) -> str:
     """
     Same as format_to_lines but returns a single string
     """
@@ -72,7 +86,7 @@ def format(template, values):
         values = list(values)
     return '\n'.join(format_to_lines(template, values))
 
-def format_to_lines(template, values):
+def format_to_lines(template: str, values: Sequence[Any]) -> List[str]:
     """
     Format 'values' into 'template'.
 
@@ -81,7 +95,7 @@ def format_to_lines(template, values):
     """
 
     # Parse the template.
-    fields = []
+    fields: List[str] = []
     t = template
     while True:
         m = _FIELD_RE.search(t)
@@ -102,18 +116,13 @@ def format_to_lines(template, values):
                        f'for number of fields {len(fields) // 2}')
 
     # Wrap each value to the width of the corresponding field.
-    values = list(values)
-    # pylint: disable=consider-using-enumerate
+    rows = []
     for vi in range(len(values)):
         fi = 2 * vi + 1
         f = fields[fi]
         v = values[vi]
 
-        v = _SPACES_RE.sub(str(v), ' ').strip()
-        if f:
-            v = textwrap.wrap(v, width=len(f))
-        else:
-            v = []
+        vs = textwrap.wrap(_cleanup_spaces(v), width=len(f)) if f else []
 
         t = f[1:2]
         if t == '>':
@@ -122,9 +131,8 @@ def format_to_lines(template, values):
             justify = _justify_center
         else:
             justify = _justify_left
-        v = list(map(lambda x: justify(x, len(f)), v))
 
-        values[vi] = v
+        rows.append(list(map(lambda x: justify(x, len(f)), vs)))
 
     line = []
     more = False
@@ -133,10 +141,10 @@ def format_to_lines(template, values):
             line.append(fields[fi])
             continue
         vi = fi // 2
-        v = values[vi]
-        if v:
-            line.append(v.pop(0))
-            if v:
+        row = rows[vi]
+        if row:
+            line.append(row.pop(0))
+            if row:
                 more = True
         else:
             line.append(' ' * len(fields[fi]))
@@ -150,23 +158,12 @@ def format_to_lines(template, values):
                 line.append(fields[fi])
                 continue
             vi = fi // 2
-            if not values[vi]:
+            if not rows[vi]:
                 line.append(' ' * len(fields[fi]))
                 continue
-            line.append(values[vi].pop(0))
-            if values[vi]:
+            line.append(rows[vi].pop(0))
+            if rows[vi]:
                 more = True
         lines.append(''.join(line).rstrip())
 
     return lines
-
-def _justify_left(s, width):
-    return s + ' ' * (width - len(s))
-
-def _justify_right(s, width):
-    return ' ' * (width - len(s)) + s
-
-def _justify_center(s, width):
-    spaces = width - len(s)
-    left = spaces // 2
-    return ' ' * left + s + ' ' * (spaces - left)

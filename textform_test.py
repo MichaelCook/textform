@@ -30,14 +30,14 @@ import textform
 
 class TestStringMethods(unittest.TestCase):
 
-    def test_basic(self):
+    def test_basic(self) -> None:
         r = textform.format('hello world', [])
         self.assertEqual(r, 'hello world')
 
         r = textform.format('', [])
         self.assertEqual(r, '')
 
-    def test_wrong_number_of_values(self):
+    def test_wrong_number_of_values(self) -> None:
         with self.assertRaises(textform.Mismatch):
             textform.format('foo', [1])
         with self.assertRaises(textform.Mismatch):
@@ -45,14 +45,14 @@ class TestStringMethods(unittest.TestCase):
         with self.assertRaises(textform.Mismatch):
             textform.format('@>>>', [])
 
-    def test3(self):
+    def test3(self) -> None:
         r = textform.format('@<<<<<< @|||||| @>>>>>>', (101, 202, 303))
         self.assertEqual(r, '101       202       303')
 
         r = textform.format(': @<<<<<< : @|||||| : @>>>>>> :', (101, 202, 303))
         self.assertEqual(r, ': 101     :   202   :     303 :')
 
-    def test_left_middle_right(self):
+    def test_left_middle_right(self) -> None:
         r = textform.format('@<<<<<<', ['foo'])
         self.assertEqual(r, 'foo')
 
@@ -64,7 +64,7 @@ class TestStringMethods(unittest.TestCase):
 
     # Leading whitespace in the template is preserved.
     # Trailing whitespace is not.
-    def test_left_middle_right_spaces(self):
+    def test_left_middle_right_spaces(self) -> None:
         r = textform.format('  @<<<<<<  ', ['foo'])
         self.assertEqual(r, '  foo')
 
@@ -74,7 +74,7 @@ class TestStringMethods(unittest.TestCase):
         r = textform.format('  @||||||  ', ['foo'])
         self.assertEqual(r, '    foo')
 
-    def test_multiline(self):
+    def test_multiline(self) -> None:
         t = 'now is the time for all good men to come to the aid of their party'.split()
         r = textform.format('@<<<<<<<<<:@|||||||||:@>>>>>>>>>',
                             [' '.join(t),
