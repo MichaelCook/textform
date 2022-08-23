@@ -80,6 +80,7 @@ class TestStringMethods(unittest.TestCase):
                             [' '.join(t),
                              ' '.join(reversed(t)),
                              ' '.join(t[:-3]).upper()])
+        # pylint: disable=consider-using-f-string
         print('\n{}\n{}\n{}'.format('=' * 70, r, '=' * 70))
         self.assertEqual(r,
                          'now is the:  party   :NOW IS THE\n' +

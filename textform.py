@@ -56,7 +56,8 @@ returns:
 """
 import re
 import textwrap
-from typing import List, Sequence, Any, Final
+from typing import Any, Final
+from collections.abc import Sequence
 
 _FIELD_RE: Final = re.compile(r'(@[<|>]+)')
 _SPACES_RE: Final = re.compile(r'\s+')
@@ -78,7 +79,7 @@ def _justify_center(s: str, width: int) -> str:
 class Mismatch(Exception):
     pass
 
-def format(template: str, values: str | Sequence[Any]) -> str:
+def format(template: str, values: str | Sequence[Any]) -> str:  # pylint: disable=redefined-builtin
     """
     Same as format_to_lines but returns a single string
     """
@@ -86,7 +87,7 @@ def format(template: str, values: str | Sequence[Any]) -> str:
         values = list(values)
     return '\n'.join(format_to_lines(template, values))
 
-def format_to_lines(template: str, values: Sequence[Any]) -> List[str]:
+def format_to_lines(template: str, values: Sequence[Any]) -> list[str]:
     """
     Format 'values' into 'template'.
 
@@ -95,7 +96,7 @@ def format_to_lines(template: str, values: Sequence[Any]) -> List[str]:
     """
 
     # Parse the template.
-    fields: List[str] = []
+    fields: list[str] = []
     t = template
     while True:
         m = _FIELD_RE.search(t)
@@ -117,7 +118,7 @@ def format_to_lines(template: str, values: Sequence[Any]) -> List[str]:
 
     # Wrap each value to the width of the corresponding field.
     rows = []
-    for vi in range(len(values)):
+    for vi in range(len(values)):  # pylint: disable=consider-using-enumerate
         fi = 2 * vi + 1
         f = fields[fi]
         v = values[vi]
@@ -132,13 +133,13 @@ def format_to_lines(template: str, values: Sequence[Any]) -> List[str]:
         else:
             justify = _justify_left
 
-        rows.append(list(map(lambda x: justify(x, len(f)), vs)))
+        rows.append(list(justify(x, len(f)) for x in vs))
 
     line = []
     more = False
-    for fi in range(len(fields)):
+    for fi, f in enumerate(fields):
         if fi % 2 == 0:
-            line.append(fields[fi])
+            line.append(f)
             continue
         vi = fi // 2
         row = rows[vi]
@@ -147,19 +148,19 @@ def format_to_lines(template: str, values: Sequence[Any]) -> List[str]:
             if row:
                 more = True
         else:
-            line.append(' ' * len(fields[fi]))
+            line.append(' ' * len(f))
     lines = [''.join(line).rstrip()]
 
     while more:
         line = []
         more = False
-        for fi in range(len(fields)):
+        for fi, f in enumerate(fields):
             if fi % 2 == 0:
-                line.append(fields[fi])
+                line.append(f)
                 continue
             vi = fi // 2
             if not rows[vi]:
-                line.append(' ' * len(fields[fi]))
+                line.append(' ' * len(f))
                 continue
             line.append(rows[vi].pop(0))
             if rows[vi]:
