@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # This software is distributed under the "Simplified BSD license":
 #
 # Copyright Michael Cook <michael@waxrat.com>. All rights reserved.
