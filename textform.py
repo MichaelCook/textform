@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # This software is distributed under the "Simplified BSD license":
 #
